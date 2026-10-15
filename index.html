@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#168acd">
+  <title>Telegram Group Feedback</title>
+  <style>
+    :root {
+      --blue: #168acd;
+      --blue-dark: #0874b9;
+      --ink: #172b3a;
+      --muted: #657786;
+      --line: #dce7ef;
+      --surface: #ffffff;
+      --background: #f2f7fb;
+      --danger: #b42318;
+      --success: #067647;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--background);
+      line-height: 1.5;
+    }
+    .hero {
+      background: linear-gradient(135deg, #168acd, #1269aa);
+      color: white;
+      padding: 34px 18px 66px;
+      text-align: center;
+    }
+    .hero .icon {
+      width: 62px; height: 62px; margin: 0 auto 12px;
+      display: grid; place-items: center; border-radius: 50%;
+      background: rgba(255,255,255,.18); font-size: 30px;
+    }
+    .hero h1 { margin: 0 0 8px; font-size: clamp(1.6rem, 5vw, 2.2rem); }
+    .hero p { max-width: 560px; margin: 0 auto; color: #eaf7ff; }
+    main { width: min(760px, calc(100% - 28px)); margin: -38px auto 36px; }
+    .card {
+      background: var(--surface); border: 1px solid var(--line);
+      border-radius: 18px; padding: clamp(18px, 4vw, 30px);
+      box-shadow: 0 10px 32px rgba(19, 64, 94, .08);
+    }
+    .notice {
+      background: #edf8ff; border: 1px solid #c8e8fa; border-radius: 12px;
+      padding: 12px 14px; color: #194d6b; font-size: .93rem; margin-bottom: 24px;
+    }
+    .field { margin: 0 0 23px; }
+    label, legend { display: block; font-weight: 700; margin-bottom: 8px; }
+    .hint { display: block; color: var(--muted); font-size: .88rem; margin-top: 5px; font-weight: 400; }
+    .required { color: var(--danger); }
+    input[type="text"], input[type="url"], textarea, select {
+      display: block; width: 100%; border: 1px solid #c8d6e0;
+      border-radius: 10px; padding: 12px 13px; font: inherit;
+      color: var(--ink); background: white; outline: none;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--blue); box-shadow: 0 0 0 3px rgba(22,138,205,.14);
+    }
+    textarea { min-height: 110px; resize: vertical; }
+    fieldset { border: 0; padding: 0; margin: 0 0 23px; min-width: 0; }
+    .rating { display: flex; flex-wrap: wrap; gap: 9px; }
+    .rating label {
+      cursor: pointer; border: 1px solid var(--line); border-radius: 12px;
+      padding: 10px 12px; margin: 0; display: flex; align-items: center; gap: 7px;
+      font-weight: 600; background: #fff;
+    }
+    .rating label:has(input:checked) {
+      background: #eaf7ff; border-color: var(--blue); color: #075b91;
+    }
+    .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .choice {
+      display: flex; gap: 10px; align-items: flex-start; font-weight: 500;
+      border: 1px solid var(--line); padding: 11px 12px; border-radius: 10px;
+      margin: 0; cursor: pointer; background: #fff;
+    }
+    .choice:has(input:checked) { border-color: var(--blue); background: #f0f9ff; }
+    input[type="checkbox"], input[type="radio"] { accent-color: var(--blue); margin-top: 4px; flex-shrink: 0; }
+    .rules-box {
+      background: #f8fbfd; border: 1px solid var(--line); padding: 15px;
+      border-radius: 12px; margin-bottom: 22px;
+    }
+    .rules-box ul { margin: 8px 0 14px; padding-left: 21px; color: #425466; }
+    .agree { display: flex; align-items: flex-start; gap: 10px; margin: 0; font-weight: 600; }
+    button {
+      width: 100%; border: 0; border-radius: 11px; padding: 14px 18px;
+      color: white; background: var(--blue); font: inherit; font-weight: 750;
+      cursor: pointer; transition: background .15s, transform .15s;
+    }
+    button:hover { background: var(--blue-dark); }
+    button:active { transform: translateY(1px); }
+    button:disabled { opacity: .55; cursor: not-allowed; }
+    .status { display: none; margin-top: 16px; padding: 13px 14px; border-radius: 10px; }
+    .status.show { display: block; }
+    .status.success { color: var(--success); background: #ecfdf3; border: 1px solid #abefc6; }
+    .status.error { color: var(--danger); background: #fef3f2; border: 1px solid #fecdca; }
+    .privacy { color: var(--muted); font-size: .84rem; text-align: center; margin: 18px 0 0; }
+    footer { text-align: center; color: var(--muted); font-size: .85rem; padding: 0 15px 28px; }
+    @media (max-width: 520px) {
+      .hero { padding: 28px 16px 60px; }
+      .choices { grid-template-columns: 1fr; }
+      .rating { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .rating label { justify-content: center; }
+      .card { border-radius: 15px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="icon" aria-hidden="true">✈</div>
+    <h1>Group Feedback &amp; Complaint</h1>
+    <p>Help us keep our Telegram community safe, friendly, and useful for everyone.</p>
+  </header>
+
+  <main>
+    <section class="card">
+      <div class="notice">
+        <strong>Before you submit:</strong> Please give accurate details. For urgent issues, contact a group admin directly. Do not include phone numbers, home addresses, or other private information.
+      </div>
+
+      <form id="feedbackForm">
+        <div class="field">
+          <label for="displayName">Your name <span class="required">*</span></label>
+          <input id="displayName" name="displayName" type="text" maxlength="80" autocomplete="name" required placeholder="Enter your name">
+        </div>
+
+        <div class="field">
+          <label for="telegramUsername">Telegram username <span class="required">*</span></label>
+          <input id="telegramUsername" name="telegramUsername" type="text" maxlength="80" required placeholder="@yourusername">
+          <span class="hint">Enter your public Telegram @username or Telegram user ID. Do not enter your login code or password.</span>
+        </div>
+
+        <fieldset>
+          <legend>Rate our group <span class="required">*</span></legend>
+          <div class="rating">
+            <label><input type="radio" name="rating" value="1" required> 1 — Poor</label>
+            <label><input type="radio" name="rating" value="2"> 2 — Fair</label>
+            <label><input type="radio" name="rating" value="3"> 3 — Good</label>
+            <label><input type="radio" name="rating" value="4"> 4 — Very good</label>
+            <label><input type="radio" name="rating" value="5"> 5 — Excellent</label>
+          </div>
+        </fieldset>
+
+        <div class="field">
+          <label for="feedback">Feedback or suggestion</label>
+          <textarea id="feedback" name="feedback" maxlength="2000" placeholder="What do you like? What could we improve?"></textarea>
+        </div>
+
+        <fieldset>
+          <legend>Complaint category <span class="hint">Choose all that apply.</span></legend>
+          <div class="choices">
+            <label class="choice"><input type="checkbox" name="categories" value="Unwanted private message"> Unwanted private message (PM)</label>
+            <label class="choice"><input type="checkbox" name="categories" value="Rule violation"> Rule violation</label>
+            <label class="choice"><input type="checkbox" name="categories" value="Harassment or abuse"> Harassment or abuse</label>
+            <label class="choice"><input type="checkbox" name="categories" value="Fake ID problem"> Fake ID problem</label>
+            <label class="choice"><input type="checkbox" name="categories" value="Advertisement or contact sharing"> Advertisement or contact sharing</label>
+            <label class="choice"><input type="checkbox" name="categories" value="Admin problem"> Admin problem</label>
+            <label class="choice"><input type="checkbox" name="categories" value="Member behaviour"> Member behaviour problem</label>
+            <label class="choice"><input type="checkbox" name="categories" value="Cross-tag problem"> Cross-tag problem</label>
+            <label class="choice"><input type="checkbox" name="categories" value="Ban-related problem"> Ban-related problem</label>
+            <label class="choice"><input type="checkbox" name="categories" value="Spam or unwanted messages"> Spam or unwanted messages</label>
+            <label class="choice"><input type="checkbox" name="categories" value="Group rules concern"> Group rules concern</label>
+            <label class="choice"><input type="checkbox" name="categories" value="Technical problem"> Technical problem</label>
+            <label class="choice"><input type="checkbox" name="categories" value="Need admin help"> I need help from an admin</label>
+            <label class="choice"><input type="checkbox" name="categories" value="Other"> Other</label>
+          </div>
+        </fieldset>
+
+        <div class="field">
+          <label for="problem">Complaint details</label>
+          <textarea id="problem" name="problem" maxlength="3000" placeholder="Explain what happened. Include relevant public username or message details, but avoid sharing private information."></textarea>
+        </div>
+
+        <div class="rules-box">
+          <strong>Community rules reminder</strong>
+          <ul>
+            <li>Do not send private messages without permission.</li>
+            <li>Report unwanted PMs to an admin and provide relevant evidence safely.</li>
+            <li>Do not share phone numbers, locations, advertisements, or private information.</li>
+            <li>Do not make unsupported accusations or use alternate IDs to bypass a ban.</li>
+            <li>Respect other members and follow admin instructions.</li>
+          </ul>
+          <label class="agree">
+            <input id="agreeRules" name="agreeRules" type="checkbox" required>
+            <span>I have read and agree to follow the group rules. <span class="required">*</span></span>
+          </label>
+        </div>
+
+        <button id="submitButton" type="submit">Submit feedback</button>
+        <div id="status" class="status" role="status" aria-live="polite"></div>
+        <p class="privacy">Demo form: this page does not send or save responses online. Connect a backend or form service to receive submissions.</p>
+      </form>
+    </section>
+  </main>
+
+  <footer>Made for a safer, more respectful community.</footer>
+
+  <script>
+    const form = document.getElementById('feedbackForm');
+    const statusBox = document.getElementById('status');
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      if (!form.reportValidity()) return;
+
+      const formData = new FormData(form);
+      const response = {
+        name: String(formData.get('displayName') || '').trim(),
+        telegramUsername: String(formData.get('telegramUsername') || '').trim(),
+        rating: Number(formData.get('rating')),
+        feedback: String(formData.get('feedback') || '').trim(),
+        categories: formData.getAll('categories'),
+        complaintDetails: String(formData.get('problem') || '').trim(),
+        agreesToRules: formData.get('agreeRules') === 'on',
+        submittedAt: new Date().toISOString()
+      };
+
+      // This demo intentionally does not transmit personal information anywhere.
+      // To receive submissions, connect a trusted backend or form service here.
+      console.log('Demo form response (local browser only):', response);
+
+      statusBox.className = 'status show success';
+      statusBox.textContent = 'Thank you! Your form has been checked in this demo, but it has NOT been sent to the admins or saved online. Connect a backend or form service to receive real submissions.';
+      statusBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+  </script>
+</body>
+</html>
